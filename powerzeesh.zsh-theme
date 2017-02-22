@@ -10,10 +10,10 @@ GEAR="\u2699"
 STAR="\u2738"
 
 #Colors picked from 256 colors
-customBlue=69
+customGrey=8
 customOrange=202
 customOrangeForGit=208
-customGrey=242
+customBlue=4
 
 #Segments
 prompt_segment(){
@@ -44,7 +44,7 @@ prompt_context(){
   local user=`whoami`
 
   if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $customBlue white " %(!.%{%F{black}%}.)$user "
+    prompt_segment $customGrey white " %(!.%{%F{black}%}.)$user "
   else
     prompt_segment $customOrange black " %(!.%{%F{black}%}.)$user "
   fi
@@ -81,7 +81,7 @@ prompt_git(){
 }
 
 prompt_dir(){
-  prompt_segment $customGrey white ' %~ '
+  prompt_segment $customBlue white ' %~ '
 }
 
 #White arrow at the end of prompt_dir
@@ -100,7 +100,7 @@ prompt_status(){
 
 #Vagrnat
   if [[ -d ./.vagrant/machines  ]]; then
-    if [[ $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
+    if [[ -f .vagrant/machines/default/virtualbox/id && $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
       symbols+="%{%F{green}%}V"
     else
       symbols+="%{%F{red}%}V"

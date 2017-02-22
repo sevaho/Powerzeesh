@@ -6,7 +6,7 @@ This is a Powerline based zsh theme. It aims for simplicity, showing information
 
 - GIT
 - Virtual_env
-- Vagrant
+- Vagrant for virtualbox
 - Show error code
 - Aware of root
 
