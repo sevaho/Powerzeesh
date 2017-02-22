@@ -10,10 +10,9 @@ GEAR="\u2699"
 STAR="\u2738"
 
 #Colors picked from 256 colors
-customGrey=8
-customOrange=202
+customBlueForName=240
 customOrangeForGit=208
-customBlue=4
+customBlueForDir=4
 
 #Segments
 prompt_segment(){
@@ -44,9 +43,9 @@ prompt_context(){
   local user=`whoami`
 
   if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $customGrey white " %(!.%{%F{black}%}.)$user "
+    prompt_segment $customBlueForName white " %(!.%{%F{black}%}.)$user "
   else
-    prompt_segment $customOrange black " %(!.%{%F{black}%}.)$user "
+    prompt_segment red black " %(!.%{%F{black}%}.)$user "
   fi
 }
 
@@ -81,7 +80,7 @@ prompt_git(){
 }
 
 prompt_dir(){
-  prompt_segment $customBlue white ' %~ '
+  prompt_segment $customBlueForDir white ' %~ '
 }
 
 #White arrow at the end of prompt_dir
@@ -98,7 +97,7 @@ prompt_status(){
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS $RETVAL"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
 
-#Vagrnat
+#Vagrant
   if [[ -d ./.vagrant/machines  ]]; then
     if [[ -f .vagrant/machines/default/virtualbox/id && $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
       symbols+="%{%F{green}%}V"
@@ -117,6 +116,12 @@ prompt_virtualenv(){
   fi
 }
 
+prompt_right(){
+  if [[ -d ./node_modules ]]; then
+    print -n "[%{%B%F{green}%}"`node -v 2> /dev/null`"%{%F{default}%b%}]%{%k%f%}"
+  fi
+}
+
 prompt(){
   RETVAL=$?
   CURRENT_BG='NONE'
@@ -132,6 +137,7 @@ prompt(){
 prompt_precmd(){
   vcs_info
   PROMPT='%{%f%b%k%}$(prompt) '
+  RPROMPT='%{%f%b%k%}$(prompt_right) '
 }
 
 prompt_setup(){
