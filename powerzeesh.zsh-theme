@@ -12,7 +12,7 @@ STAR="\u2738"
 #Colors picked from 256 colors
 color_prompt_name=8
 color_prompt_dir=66
-color_prompt_white=7
+color_prompt_white=251
 color_prompt_git_green=2
 color_prompt_git_orange=208
 color_prompt_git_red=1
