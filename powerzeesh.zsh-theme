@@ -10,9 +10,13 @@ GEAR="\u2699"
 STAR="\u2738"
 
 #Colors picked from 256 colors
-customBlueForName=240
-customOrangeForGit=208
-customBlueForDir=4
+color_prompt_name=8
+color_prompt_dir=66
+color_prompt_white=7
+color_prompt_git_green=2
+color_prompt_git_orange=208
+color_prompt_git_red=1
+color_prompt_root=1
 
 #Segments
 prompt_segment(){
@@ -43,9 +47,9 @@ prompt_context(){
   local user=`whoami`
 
   if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $customBlueForName white " %(!.%{%F{black}%}.)$user "
+    prompt_segment $color_prompt_name white " %(!.%{%F{black}%}.)$user "
   else
-    prompt_segment red black " %(!.%{%F{black}%}.)$user "
+    prompt_segment $color_prompt_root black " %(!.%{%F{black}%}.)$user "
   fi
 }
 
@@ -60,13 +64,13 @@ prompt_git(){
   ref="$vcs_info_msg_0_"
   if [[ -n "$ref" ]]; then
     if is_dirty; then
-      color=red
+      color=$color_prompt_git_red
       ref="${ref} $PLUSMINUS"
     elif commitsAhead; then
-      color=$customOrangeForGit
+      color=$color_prompt_git_orange
       ref="${ref} $STAR"
     else
-      color=green
+      color=$color_prompt_git_green
       ref="${ref} "
     fi
     if [[ "${ref/.../}" == "$ref" ]]; then
@@ -80,12 +84,12 @@ prompt_git(){
 }
 
 prompt_dir(){
-  prompt_segment $customBlueForDir white ' %~ '
+  prompt_segment $color_prompt_dir white ' %~ '
 }
 
 #White arrow at the end of prompt_dir
 prompt_dir_end(){
-  prompt_segment white white ' '
+  prompt_segment $color_prompt_white $color_prompt_white ' '
 }
 
 # Status:
@@ -155,3 +159,4 @@ prompt_setup(){
 }
 
 prompt_setup "$@"
+
