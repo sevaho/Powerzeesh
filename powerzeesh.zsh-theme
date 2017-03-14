@@ -84,7 +84,7 @@ prompt_git(){
 }
 
 prompt_dir(){
-  prompt_segment $color_prompt_dir white ' %~ '
+  prompt_segment $color_prompt_dir black ' %~ '
 }
 
 #White arrow at the end of prompt_dir
