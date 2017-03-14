@@ -9,6 +9,7 @@ This is a Powerline based zsh theme. It aims for simplicity, showing information
 - Vagrant for virtualbox
 - Show error code
 - Aware of root
+- nodejs version when working in nodejs directory
 
 ## Credits
 
