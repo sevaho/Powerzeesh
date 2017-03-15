@@ -10,8 +10,8 @@ GEAR="\u2699"
 STAR="\u2738"
 
 #Colors picked from 256 colors
-color_prompt_name=8
-color_prompt_dir=66
+color_prompt_name=3
+color_prompt_dir=0
 color_prompt_white=251
 color_prompt_git_green=2
 color_prompt_git_orange=208
@@ -47,7 +47,7 @@ prompt_context(){
   local user=`whoami`
 
   if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
-    prompt_segment $color_prompt_name white " %(!.%{%F{black}%}.)$user "
+    prompt_segment $color_prompt_name black " %(!.%{%F{black}%}.)$user "
   else
     prompt_segment $color_prompt_root black " %(!.%{%F{black}%}.)$user "
   fi
@@ -84,7 +84,7 @@ prompt_git(){
 }
 
 prompt_dir(){
-  prompt_segment $color_prompt_dir black ' %~ '
+  prompt_segment $color_prompt_dir $color_prompt_white ' %~ '
 }
 
 #White arrow at the end of prompt_dir
