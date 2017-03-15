@@ -10,8 +10,8 @@ GEAR="\u2699"
 STAR="\u2738"
 
 #Colors picked from 256 colors
-color_prompt_name=3
-color_prompt_dir=0
+color_prompt_name=66
+color_prompt_dir=8
 color_prompt_white=251
 color_prompt_git_green=2
 color_prompt_git_orange=208
