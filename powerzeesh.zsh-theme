@@ -19,7 +19,7 @@ color_prompt_git_red=1
 color_prompt_root=1
 
 #Segments
-prompt_segment(){
+prompt_segment () {
 
     local bg fg
 
@@ -41,7 +41,7 @@ prompt_segment(){
 
 }
 
-prompt_end(){
+prompt_end () {
 
     if [[ -n $CURRENT_BG ]]; then
 
@@ -58,7 +58,7 @@ prompt_end(){
 
 }
 
-prompt_context(){
+prompt_context () {
 
     local user=`whoami`
 
@@ -74,17 +74,17 @@ prompt_context(){
 
 }
 
-prompt_git(){
+prompt_git () {
 
     local color ref
 
-    is_dirty(){
+    is_dirty () {
 
         test -n "$(git status --porcelain --ignore-submodules)"
 
     }
 
-    commitsAhead(){
+    commitsAhead () {
 
         test -n "$(git_commits_ahead)"
 
@@ -128,7 +128,7 @@ prompt_git(){
 
 }
 
-prompt_fossil(){
+prompt_fossil () {
 
     local _OUTPUT=`fossil branch 2>&1`
     local _STATUS=`echo $_OUTPUT | grep "use --repo"`
@@ -158,14 +158,14 @@ prompt_fossil(){
 
 }
 
-prompt_dir(){
+prompt_dir () {
 
     prompt_segment $color_prompt_dir $color_prompt_white ' %~ '
 
 }
 
 #White arrow at the end of prompt_dir
-prompt_dir_end(){
+prompt_dir_end () {
 
     prompt_segment $color_prompt_white $color_prompt_white ' '
 
@@ -174,7 +174,7 @@ prompt_dir_end(){
 # Status:
 # - was there an error
 # - are there background jobs?
-prompt_status(){
+prompt_status () {
 
     local symbols
     symbols=()
@@ -199,7 +199,7 @@ prompt_status(){
 
 }
 
-prompt_virtualenv(){
+prompt_virtualenv () {
 
     if [[ -n $VIRTUAL_ENV ]]; then
 
@@ -211,7 +211,7 @@ prompt_virtualenv(){
 
 }
 
-prompt_right(){
+prompt_right () {
 
     if [[ -d ./node_modules ]]; then
         print -n "[%{%B%F{green}%}"`node -v 2> /dev/null`"%{%F{default}%b%}]%{%k%f%}"
@@ -220,7 +220,7 @@ prompt_right(){
 
 }
 
-prompt(){
+prompt () {
 
     RETVAL=$?
     CURRENT_BG='NONE'
@@ -235,7 +235,7 @@ prompt(){
 
 }
 
-prompt_precmd(){
+prompt_precmd () {
 
     vcs_info
     PROMPT='%{%f%b%k%}$(prompt) '
@@ -243,7 +243,7 @@ prompt_precmd(){
 
 }
 
-prompt_setup(){
+prompt_setup () {
 
     autoload -Uz add-zsh-hook
     autoload -Uz vcs_info
