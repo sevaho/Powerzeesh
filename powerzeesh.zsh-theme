@@ -1,6 +1,6 @@
 FG=black
 
-#unicode characters
+# unicode characters
 SEPARATOR="\ue0b0"
 GITDIFFERENT="\u00b1"
 BRANCH="\ue0a0"
@@ -9,16 +9,21 @@ CROSS="\u2718"
 GEAR="\u2699"
 STAR="\u2738"
 
-#Colors picked from 256 colors
-color_prompt_name=66
-color_prompt_dir=8
-color_prompt_white=251
+# colors picked from 256 colors
+color_prompt_name_bg=8
+color_prompt_name_fg=11
+color_prompt_root_bg=1
+color_prompt_root_fg=11
+color_prompt_dir_bg=11
+color_prompt_dir_fg=8
+color_prompt_dir_root_bg=8
+color_prompt_dir_root_fg=11
+color_prompt_white=7
 color_prompt_git_green=2
 color_prompt_git_orange=208
 color_prompt_git_red=1
-color_prompt_root=1
 
-#Segments
+# segments
 prompt_segment () {
 
     local bg fg
@@ -64,11 +69,11 @@ prompt_context () {
 
     if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
 
-        prompt_segment $color_prompt_name black " %(!.%{%F{black}%}.)$user "
+        prompt_segment $color_prompt_name_bg $color_prompt_name_fg " %(!.%{%F{black}%}.)$user "
 
     else
 
-        prompt_segment $color_prompt_root black " %(!.%{%F{black}%}.)$user "
+        prompt_segment $color_prompt_root_bg $color_prompt_root_fg " %(!.%{%F{black}%}.)$user "
 
     fi
 
@@ -160,18 +165,28 @@ prompt_fossil () {
 
 prompt_dir () {
 
-    prompt_segment $color_prompt_dir $color_prompt_white ' %~ '
+    local user=`whoami`
+
+    if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
+
+        prompt_segment $color_prompt_dir_bg $color_prompt_dir_fg ' %~ '
+
+    else
+
+        prompt_segment $color_prompt_dir_root_bg $color_prompt_dir_root_fg ' %~ '
+
+    fi
 
 }
 
-#White arrow at the end of prompt_dir
+# white arrow at the end of prompt_dir
 prompt_dir_end () {
 
     prompt_segment $color_prompt_white $color_prompt_white ' '
 
 }
 
-# Status:
+# status:
 # - was there an error
 # - are there background jobs?
 prompt_status () {
@@ -182,7 +197,7 @@ prompt_status () {
     [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS $RETVAL"
     [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
 
-#Vagrant
+# vagrant
     if [[ -d ./.vagrant/machines  ]]; then
 
         if [[ -f .vagrant/machines/default/virtualbox/id && $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
