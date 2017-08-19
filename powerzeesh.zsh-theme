@@ -1,46 +1,39 @@
 FG=black
-
-# unicode characters
-SEPARATOR="\ue0b0"
-GITDIFFERENT="\u00b1"
-BRANCH="\ue0a0"
-DETACHED="\u27a6"
-CROSS="\u2718"
-GEAR="\u2699"
-STAR="\u2738"
+SYMBOLS=()
+CURRENT_BG=7
+fg=white
 
 # colors picked from 256 colors
 color_prompt_name_bg=10
-color_prompt_name_fg=8
+color_prompt_name_fg=10
 color_prompt_root_bg=1
-color_prompt_root_fg=11
+color_prompt_root_fg=1
 
 color_prompt_dir_bg=8
-color_prompt_dir_fg=11
+color_prompt_dir_fg=14
 color_prompt_dir_root_bg=8
 color_prompt_dir_root_fg=11
 
-color_prompt_white=7
-
+color_prompt_white=15
 color_prompt_git_green=2
-color_prompt_git_red=1
 color_prompt_git_orange=208
+color_prompt_git_red=1
 
 # segments
 prompt_segment () {
 
-    local bg fg
+    local bg
 
     [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
     [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
 
     if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
 
-        print -n "%{$bg%F{$CURRENT_BG}%}$SEPARATOR%{$fg%}"
+        print -n "%{$fg%}"
 
     else
 
-        print -n "%{$bg%}%{$fg%}"
+        print -n "%{$fg%}"
 
     fi
 
@@ -49,34 +42,21 @@ prompt_segment () {
 
 }
 
-prompt_end () {
-
-    if [[ -n $CURRENT_BG ]]; then
-
-        print -n "%{%k%F{$CURRENT_BG}%}$SEPARATOR"
-
-    else
-
-        print -n "%{%k%}"
-
-    fi
-
-    print -n "%{%f%}"
-    CURRENT_BG=''
-
-}
-
 prompt_context () {
 
     local user=`whoami`
 
-    if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
+    if [[ -n "$SSH_CONNECTION" ]]; then
 
-        prompt_segment $color_prompt_name_bg $color_prompt_name_fg " %(!.%{%F{black}%}.)$user "
+        prompt_segment $color_prompt_name_bg $color_prompt_name_fg " %{%F{white}%}[SSH] %{%F{yellow}%}%{%F{$color_prompt_name_fg}%}${HOST}"
+
+    elif [[ $(id -u) -ne 0 ]]; then
+
+        prompt_segment $color_prompt_name_bg $color_prompt_name_fg "$"
 
     else
 
-        prompt_segment $color_prompt_root_bg $color_prompt_root_fg " %(!.%{%F{black}%}.)$user "
+        prompt_segment $color_prompt_root_bg $color_prompt_root_fg "#"
 
     fi
 
@@ -129,8 +109,7 @@ prompt_git () {
 
         fi
 
-        prompt_segment $color $FG
-        print -Pn " $ref"
+        prompt_segment $color
 
     fi
 
@@ -145,22 +124,18 @@ prompt_fossil () {
 
         local _EDITED=`fossil changes`
         local _EDITED_SYM="$ZSH_THEME_FOSSIL_PROMPT_CLEAN"
-        local _BRANCH=`echo $_OUTPUT | grep "* " | sed 's/* //g'`
 
         if [ "$_EDITED" != "" ]; then
 
             color=$color_prompt_git_red
-            ref=$(fossil changes | wc -l)
 
         else
 
             color=$color_prompt_git_green
-            ref=$(fossil changes | wc -l)
 
         fi
 
         prompt_segment $color $FG
-        print -Pn " $ref "   
 
     fi
 
@@ -168,52 +143,40 @@ prompt_fossil () {
 
 prompt_dir () {
 
-    local user=`whoami`
-
-    if [[ $(id -u) -ne 0 || -n "$SSH_CONNECTION" ]]; then
-
-        prompt_segment $color_prompt_dir_bg $color_prompt_dir_fg ' %~ '
-
-    else
-
-        prompt_segment $color_prompt_dir_root_bg $color_prompt_dir_root_fg ' %~ '
-
-    fi
-
-}
-
-# white arrow at the end of prompt_dir
-prompt_dir_end () {
-
-    prompt_segment $color_prompt_white $color_prompt_white ' '
+    prompt_segment $color_prompt_dir_bg $color_prompt_dir_fg ' %~'
 
 }
 
 # status:
-# - was there an error
-# - are there background jobs?
+# - error
+# - jobs
+# - vagrant
+# - nodejs
 prompt_status () {
 
-    local symbols
-    symbols=()
+    [[ $RETVAL -ne 0 ]] && SYMBOLS+="%{%F{red}%}$RETVAL "
+    [[ $(jobs -l | wc -l) -gt 0 ]] && SYMBOLS+="%{%F{cyan}%}J "
 
-    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$CROSS $RETVAL"
-    [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$GEAR"
-
-# vagrant
+    # vagrant
     if [[ -d ./.vagrant/machines  ]]; then
 
         if [[ -f .vagrant/machines/default/virtualbox/id && $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
 
-            symbols+="%{%F{green}%}V"
+            SYMBOLS+="%{%F{green}%}V "
             else
-            symbols+="%{%F{red}%}V"
+            SYMBOLS+="%{%F{red}%}V "
 
         fi
 
     fi
 
-    [[ -n "$symbols" ]] && prompt_segment $FG default " $symbols "
+    if [[ -d ./node_modules ]]; then
+
+        SYMBOLS+="%{%F{green}%}`node -v 2> /dev/null` "
+
+    fi
+
+    prompt_segment $FG default "$SYMBOLS"
 
 }
 
@@ -229,24 +192,26 @@ prompt_virtualenv () {
 
 }
 
+prompt_end () {
+
+    [[ $CURRENT_BG == 8 ]] && print -n "%{%k%F{white}%} ❯" || print -n "%{%k%F{$CURRENT_BG}%} ❯"
+
+}
+
+# prompt right
 prompt_right () {
 
-    if [[ -d ./node_modules ]]; then
-        print -n "[%{%B%F{green}%}"`node -v 2> /dev/null`"%{%F{default}%b%}]%{%k%f%}"
-
-    fi
 
 }
 
 prompt () {
 
     RETVAL=$?
-    CURRENT_BG='NONE'
+    CURRENT_BG=red
     prompt_status
     prompt_context
     prompt_virtualenv
     prompt_dir
-    prompt_dir_end
     prompt_git
     prompt_fossil
     prompt_end

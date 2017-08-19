@@ -2,8 +2,6 @@
 
 This is a Powerline based zsh theme. It aims for simplicity, showing information only when it's relevant, speed and look.
 
-NOTE: powerzeesh_server is not done yet, I want it to look something else same features but without the powerline bars.
-
 ## Features
 
 - GIT
