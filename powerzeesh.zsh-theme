@@ -48,7 +48,7 @@ prompt_context () {
 
     if [[ -n "$SSH_CONNECTION" ]]; then
 
-        prompt_segment $color_prompt_name_bg $color_prompt_name_fg " %{%F{white}%}[SSH] %{%F{yellow}%}%{%F{$color_prompt_name_fg}%}${HOST}"
+        prompt_segment $color_prompt_name_bg $color_prompt_name_fg "%{%F{white}%}[SSH] %{%F{yellow}%}%{%F{$color_prompt_name_fg}%}${HOST}"
 
     elif [[ $(id -u) -ne 0 ]]; then
 
