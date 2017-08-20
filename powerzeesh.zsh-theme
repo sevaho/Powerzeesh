@@ -2,19 +2,19 @@ FG=black
 SYMBOLS=()
 
 # colors picked from 256 colors
-color_prompt_name_bg=10
-color_prompt_name_fg=10
-color_prompt_root_bg=1
+color_prompt_name_fg=2
+color_prompt_name_bg=0
 color_prompt_root_fg=1
+color_prompt_root_bg=0
 
-color_prompt_dir_bg=8
-color_prompt_dir_fg=14
+color_prompt_dir_fg=6
+color_prompt_dir_bg=7
 color_prompt_dir_root_bg=8
 color_prompt_dir_root_fg=11
 
-color_prompt_white=15
+color_prompt_white=7
 color_prompt_git_green=2
-color_prompt_git_orange=208
+color_prompt_git_orange=11
 color_prompt_git_red=1
 
 # segments
