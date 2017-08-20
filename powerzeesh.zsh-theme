@@ -1,7 +1,5 @@
 FG=black
 SYMBOLS=()
-CURRENT_BG=7
-fg=white
 
 # colors picked from 256 colors
 color_prompt_name_bg=10
@@ -22,7 +20,7 @@ color_prompt_git_red=1
 # segments
 prompt_segment () {
 
-    local bg
+    local bg fg
 
     [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
     [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
@@ -109,7 +107,7 @@ prompt_git () {
 
         fi
 
-        prompt_segment $color
+        prompt_segment $color $color " G"
 
     fi
 
@@ -135,7 +133,7 @@ prompt_fossil () {
 
         fi
 
-        prompt_segment $color $FG
+        prompt_segment $color $color " F"
 
     fi
 
@@ -144,6 +142,24 @@ prompt_fossil () {
 prompt_dir () {
 
     prompt_segment $color_prompt_dir_bg $color_prompt_dir_fg ' %~'
+
+}
+
+prompt_virtualenv () {
+
+    if [[ -n $VIRTUAL_ENV ]]; then
+
+        color=cyan
+        prompt_segment $color $FG
+        print -Pn " $(basename $VIRTUAL_ENV) "
+
+    fi
+
+}
+
+prompt_end () {
+
+    [[ $CURRENT_BG == 8 ]] && print -n "%{%F{white}%} ❯" || print -n "%{%F{$CURRENT_BG}%} ❯"
 
 }
 
@@ -157,7 +173,6 @@ prompt_status () {
     [[ $RETVAL -ne 0 ]] && SYMBOLS+="%{%F{red}%}$RETVAL "
     [[ $(jobs -l | wc -l) -gt 0 ]] && SYMBOLS+="%{%F{cyan}%}J "
 
-    # vagrant
     if [[ -d ./.vagrant/machines  ]]; then
 
         if [[ -f .vagrant/machines/default/virtualbox/id && $(VBoxManage list runningvms | grep -c $(/bin/cat .vagrant/machines/*/*/id)) -gt 0  ]]; then
@@ -180,35 +195,9 @@ prompt_status () {
 
 }
 
-prompt_virtualenv () {
-
-    if [[ -n $VIRTUAL_ENV ]]; then
-
-        color=cyan
-        prompt_segment $color $FG
-        print -Pn " $(basename $VIRTUAL_ENV) "
-
-    fi
-
-}
-
-prompt_end () {
-
-    [[ $CURRENT_BG == 8 ]] && print -n "%{%k%F{white}%} ❯" || print -n "%{%k%F{$CURRENT_BG}%} ❯"
-
-}
-
-# prompt right
-prompt_right () {
-
-
-}
-
 prompt () {
 
-    RETVAL=$?
-    CURRENT_BG=red
-    prompt_status
+    CURRENT_BG="NONE"
     prompt_context
     prompt_virtualenv
     prompt_dir
@@ -220,9 +209,10 @@ prompt () {
 
 prompt_precmd () {
 
+    RETVAL=$?
     vcs_info
     PROMPT='%{%f%b%k%}$(prompt) '
-    RPROMPT='%{%f%b%k%}$(prompt_right) '
+    RPROMPT='%{%f%b%k%}$(prompt_status) '
 
 }
 
