@@ -54,7 +54,15 @@ prompt_context () {
 
     else
 
-        prompt_segment $color_prompt_root_bg $color_prompt_root_fg "#"
+        if grep "Server" /etc/hostname > /dev/null; then
+
+            prompt_segment $color_prompt_root_bg $color_prompt_root_fg "# ${HOST}"
+
+        else
+
+            prompt_segment $color_prompt_root_bg $color_prompt_root_fg "#"
+
+        fi
 
     fi
 
