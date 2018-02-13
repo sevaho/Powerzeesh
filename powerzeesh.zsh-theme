@@ -56,7 +56,7 @@ prompt_context () {
 
         if grep "Server" /etc/hostname > /dev/null || grep "wg" /etc/hostname > /dev/null; then
 
-            prompt_segment $color_prompt_root_bg $color_prompt_root_fg "# ${HOST}"
+            prompt_segment $color_prompt_root_bg $color_prompt_root_fg "# %{%F{white}%}[SSH] $%{%F{$color_prompt_root_fg}%}${HOST}"
 
         else
 
