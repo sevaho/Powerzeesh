@@ -54,7 +54,7 @@ prompt_context () {
 
     else
 
-        if grep "Server" /etc/hostname > /dev/null; then
+        if grep "Server" /etc/hostname > /dev/null || grep "wg" /etc/hostname > /dev/null; then
 
             prompt_segment $color_prompt_root_bg $color_prompt_root_fg "# ${HOST}"
 
@@ -210,7 +210,7 @@ prompt () {
     prompt_virtualenv
     prompt_dir
     prompt_git
-    prompt_fossil
+#    prompt_fossil
     prompt_end
 
 }
