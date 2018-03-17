@@ -158,8 +158,8 @@ prompt_virtualenv () {
     if [[ -n $VIRTUAL_ENV ]]; then
 
         color=cyan
-        prompt_segment $color $FG
-        print -Pn " $(basename $VIRTUAL_ENV) "
+        prompt_segment $color_prompt_dir_bg $color_prompt_git_orange
+        print -Pn " $(basename $VIRTUAL_ENV)"
 
     fi
 
