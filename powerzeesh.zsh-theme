@@ -115,33 +115,19 @@ prompt_git () {
 
         fi
 
-        prompt_segment $color $color " G"
+        prompt_segment $color $color " {$ref}"
 
     fi
 
 }
 
-prompt_fossil () {
+prompt_vpn () {
 
-    local _OUTPUT=`fossil branch 2>&1`
-    local _STATUS=`echo $_OUTPUT | grep "use --repo"`
+    local OUTPUT=`pgrep -x openvpn`
 
-    if [ "$_STATUS" = "" ]; then
+    if [[ $OUTPUT != "" ]]; then
 
-        local _EDITED=`fossil changes`
-        local _EDITED_SYM="$ZSH_THEME_FOSSIL_PROMPT_CLEAN"
-
-        if [ "$_EDITED" != "" ]; then
-
-            color=$color_prompt_git_red
-
-        else
-
-            color=$color_prompt_git_green
-
-        fi
-
-        prompt_segment $color $color " F"
+        prompt_segment $color_prompt_dir_bg $color_prompt_git_red ' <VPN>'
 
     fi
 
@@ -167,7 +153,7 @@ prompt_virtualenv () {
 
 prompt_end () {
 
-    [[ $CURRENT_BG == 8 ]] && print -n "%{%F{white}%} ❯" || print -n "%{%F{$CURRENT_BG}%} ❯"
+    [[ $CURRENT_BG == 8 ]] && print -n "%{%F{white}%} ❯" || print -n "%{%F{white}%} ❯"
 
 }
 
@@ -208,9 +194,9 @@ prompt () {
     CURRENT_BG="NONE"
     prompt_context
     prompt_virtualenv
+    prompt_vpn
     prompt_dir
     prompt_git
-#    prompt_fossil
     prompt_end
 
 }
